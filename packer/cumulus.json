@@ -1,10 +1,14 @@
 {
   "description": "Create a Vagrant box file from the Cumulus Linux virtual machine appliance",
+  "variables": {
+    "source": "CumulusLinux-2.5.3-018dc278be843b92.ova",
+    "name": "cumulus-vm-lite"
+  },
   "builders": [
     {
       "type": "virtualbox-ovf",
-      "source_path": "CumulusLinux-2.5.3-018dc278be843b92.ova",
-      "vm_name": "cumulus-vm-lite",
+      "source_path": "{{user `source`}}",
+      "vm_name": "{{user `name`}}",
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--nic1", "nat"],
         ["modifyvm", "{{.Name}}", "--nic2", "null"],
@@ -27,7 +31,8 @@
   ],
   "post-processors": [
     {
-      "type": "vagrant"
+      "type": "vagrant",
+      "output": "{{user `name`}}.box"
     }
   ]
 }
