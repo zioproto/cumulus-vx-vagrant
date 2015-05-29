@@ -1,0 +1,33 @@
+{
+  "description": "Create a Vagrant box file from the Cumulus Linux virtual machine appliance",
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "CumulusLinux-2.5.3-018dc278be843b92.ova",
+      "vm_name": "cumulus-vm-lite",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+        ["modifyvm", "{{.Name}}", "--nic2", "null"],
+        ["modifyvm", "{{.Name}}", "--nic3", "null"],
+        ["modifyvm", "{{.Name}}", "--nic4", "null"]
+      ],
+      "headless": false,
+      "ssh_username": "cumulus",
+      "ssh_password": "cn321",
+      "ssh_wait_timeout": "20s",
+      "shutdown_command": "sudo -S shutdown -h now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/setup.sh",
+      "execute_command": "chmod +x {{ .Path }};sudo {{ .Vars }} {{ .Path }}" 
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant"
+    }
+  ]
+}
