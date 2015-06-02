@@ -17,6 +17,9 @@
         ["modifyvm", "{{.Name}}", "--nic3", "{{user `intnet`}}"],
         ["modifyvm", "{{.Name}}", "--nic4", "{{user `intnet`}}"]
       ],
+      "vboxmanage_post": [
+        ["modifyvm", "{{.Name}}", "--ostype", "Linux"]
+      ],
       "headless": false,
       "ssh_username": "cumulus",
       "ssh_password": "cn321",
