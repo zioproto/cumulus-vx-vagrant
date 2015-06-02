@@ -2,3 +2,4 @@ packer_cache
 .vagrant
 *.ova
 *.box
+Vagrantfile
