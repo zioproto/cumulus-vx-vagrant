@@ -35,8 +35,16 @@ function install_guest_additions
     mkdir "$VBOX"
     mount -o loop "$ISO" "$VBOX"
 
-    # Install
-    sh "$VBOX/VBoxLinuxAdditions.run"
+    # Install Guest Additions build dependencies
+    apt-get update
+    apt-get install linux-headers
+
+    # The current VM image has a dangling symlink which we need to fix up
+    KERN_VER=$(uname -r)
+    ln -sf "/usr/src/linux-headers-$KERN_VER" "/lib/modules/$KERN_VER/build"
+
+    # Install but ignore a non-0 exit status
+    sh "$VBOX/VBoxLinuxAdditions.run" || true
 
     # Clean up
     umount "$VBOX"
@@ -68,7 +76,7 @@ function install_chef
 
 # Defaults
 WANT_VAGRANT_USER=1
-WANT_VBOX_ADDITIONS=0 # XXX Currently doesn't work; no loop device support
+WANT_VBOX_ADDITIONS=1
 INSTALL_PUPPET=0
 PUPPET_VERSION=""
 INSTALL_CHEF=0
