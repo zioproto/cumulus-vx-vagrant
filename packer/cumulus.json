@@ -1,8 +1,8 @@
 {
   "description": "Create a Vagrant box file from the Cumulus Linux virtual machine appliance",
   "variables": {
-    "source": "CumulusLinux-2.5.3-018dc278be843b92.ova",
-    "name": "cumulus-vm-lite",
+    "source": "CumulusLinux-2.5.3.ova",
+    "name": "cumulus-vx-2.5.3",
     "intnet": "intnet"
   },
   "builders": [
@@ -20,7 +20,6 @@
       "vboxmanage_post": [
         ["modifyvm", "{{.Name}}", "--ostype", "Linux"]
       ],
-      "headless": false,
       "ssh_username": "cumulus",
       "ssh_password": "cn321",
       "ssh_wait_timeout": "20s",
