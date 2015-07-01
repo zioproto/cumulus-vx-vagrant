@@ -73,9 +73,7 @@ drwxr-xr-x  3 kristian  staff        102  1 Jul 11:04 packer
 drwxr-xr-x  2 kristian  staff         68  1 Jul 11:18 packer_cache
 drwxr-xr-x  3 kristian  staff        102  1 Jul 10:56 scripts
 drwxr-xr-x  4 kristian  staff        136  1 Jul 11:10 vagrant
-$ vagrant box remove cumulux-vx
-Removing box 'cumulux-vx' (v0) with provider 'virtualbox'...
-MacBook:Cumulus-VX kristian$ vagrant box add cumulus-vx cumulus-vx-2.5.3.box
+$ vagrant box add cumulus-vx cumulus-vx-2.5.3.box
 ==> box: Adding box 'cumulus-vx' (v0) for provider:
     box: Downloading: file:///Users/kristian/Source/Cumulus-VX/cumulus-vx-2.5.3.box
 ==> box: Successfully added box 'cumulus-vx' (v0) for 'virtualbox'!
