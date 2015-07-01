@@ -84,11 +84,10 @@ CHEF_VERSION=""
 
 # Select configuration
 # XXX getopt
-INSTALL_PUPPET=1
-INSTALL_CHEF=1
+
 # Normally the puppet & chef versions would be selected according to which version of cumulus + flags
-PUPPET_VERSION="3.6.2-1puppetlabs1"
-CHEF_VERSION="11.6.2-1"
+#PUPPET_VERSION="3.6.2-1puppetlabs1"
+#CHEF_VERSION="11.6.2-1"
 
 # Perform configuration
 if [ $WANT_VAGRANT_USER -ne 0 ]
