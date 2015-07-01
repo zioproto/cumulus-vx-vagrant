@@ -41,3 +41,46 @@ Currently the configuration is hard-coded into the Packer configuration and setu
 * Copy (or symlink) the `vagrant/Vagrantfile` file to a working directory and run `vagrant up`
 * When Vagrant has started the virtual machine, you can log in with `vagrant ssh`.
 * When you are finished, you can destroy the virtual machine instance with `vagrant destroy`
+
+## Example
+```
+$ ls -l
+total 1043672
+-rw-r--r--  1 kristian  staff  534353920 22 Jun 13:14 CumulusLinux-2.5.3.ova
+-rw-r--r--  1 kristian  staff       2045  1 Jul 11:17 README.md
+drwxr-xr-x  3 kristian  staff        102  1 Jul 11:04 packer
+drwxr-xr-x  3 kristian  staff        102  1 Jul 10:56 scripts
+drwxr-xr-x  4 kristian  staff        136  1 Jul 11:10 vagrant
+$  packer build packer/cumulus.json
+virtualbox-ovf output will be in this color.
+
+==> virtualbox-ovf: Downloading or copying Guest additions
+    virtualbox-ovf: Downloading or copying: file:///Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
+==> virtualbox-ovf: Importing VM: CumulusLinux-2.5.3.ova
+...
+Build 'virtualbox-ovf' finished.
+
+==> Builds finished. The artifacts of successful builds are:
+--> virtualbox-ovf: 'virtualbox' provider box: cumulus-vx-2.5.3.box
+$ ln -s vagrant/Vagrantfile Vagrantfile
+$ ls -l
+total 2157160
+-rw-r--r--  1 kristian  staff  534353920 22 Jun 13:14 CumulusLinux-2.5.3.ova
+-rw-r--r--  1 kristian  staff       2045  1 Jul 11:17 README.md
+lrwxr-xr-x  1 kristian  staff         19  1 Jul 11:22 Vagrantfile -> vagrant/Vagrantfile
+-rw-r--r--  1 kristian  staff  570099632  1 Jul 11:21 cumulus-vx-2.5.3.box
+drwxr-xr-x  3 kristian  staff        102  1 Jul 11:04 packer
+drwxr-xr-x  2 kristian  staff         68  1 Jul 11:18 packer_cache
+drwxr-xr-x  3 kristian  staff        102  1 Jul 10:56 scripts
+drwxr-xr-x  4 kristian  staff        136  1 Jul 11:10 vagrant
+$ vagrant box remove cumulux-vx
+Removing box 'cumulux-vx' (v0) with provider 'virtualbox'...
+MacBook:Cumulus-VX kristian$ vagrant box add cumulus-vx cumulus-vx-2.5.3.box
+==> box: Adding box 'cumulus-vx' (v0) for provider:
+    box: Downloading: file:///Users/kristian/Source/Cumulus-VX/cumulus-vx-2.5.3.box
+==> box: Successfully added box 'cumulus-vx' (v0) for 'virtualbox'!
+$  vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Importing base box 'cumulus-vx'...
+...
+``` 
