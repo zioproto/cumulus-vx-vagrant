@@ -24,6 +24,9 @@ module VagrantPlugins
             entries = []
             networks.each do |network|
               interfaces.add(network[:interface])
+
+              network[:name] = network[:interface] == 0 ? 'eth' : 'swp'
+
               entry = TemplateRenderer.render("guests/cumulus/network_#{network[:type]}",
                                               options: network,
                                               template_root: "#{VagrantPlugins::GuestCumulus.source_root}/templates")
