@@ -10,7 +10,7 @@
     {
       "type": "virtualbox-ovf",
       "source_path": "{{user `source`}}",
-      "vm_name": "{{user `name`}}-{{user `version`}}-vbox",
+      "vm_name": "{{user `name`}}-{{user `version`}}",
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--memory", "512"],
         ["modifyvm", "{{.Name}}", "--chipset", "ich9"],
