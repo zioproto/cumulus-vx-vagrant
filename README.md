@@ -35,6 +35,18 @@ An example Vagrantfile for use with the Vagrant box file produced by Packer.
 
 Currently the configuration is hard-coded into the Packer configuration and setup script. If you wish to make any changes to the build process, modify the `packer/cumulus.json` and `scripts/setup.sh` files and re-run the build process.
 
+## Pre-installed software
+
+Vagrant can be combined with other software such as Test Kitchen or Beaker to test Ansible, Puppet & Chef configuration management scripts. The installation script is therefore capable of pre-installing software when it builds the Vagrant virtual machine. This is particularly important as software such as Test Kitchen will attempt to install Chef automatically if it is not already available, which fails as the default installer does not know how to install Chef on Cumulus.
+
+Right now there is no mechanism to select what software to install at build time; you must edit `scripts/setup.sh` manually and re-run Packer to produce a new box with the software pre-installed. You can then import the new box file with a different name which distinguishes it from the other boxes, and indicates what software is installed.
+
+The Vagrant box naming scheme is as follows:
+
+* cumulus-vx-2.5.3        - "Standard" Cumulus VX box file with no additional software (E.g. Ansible, Puppet or Chef) pre-installed
+* cumulus-vx-2.5.3-chef   - Cumulus VX with Chef pre-installed
+* cumulus-vx-2.5.3-puppet - Cumulus VX with Puppet pre-installed
+
 ## Using the Vagrant box file
 
 * Import the `cumulus-vx-2.5.3.box` into Vagrant with `vagrant box add cumulux-vx cumulus-vx-2.5.3.box`
