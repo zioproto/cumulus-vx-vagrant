@@ -1,0 +1,55 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: cumulus-vx-2.5.3
+    driver:
+      box: cumulus-vx-2.5.3
+      # Disable this until the vagrant-cumulus plugin supports change_hostname
+      vm_hostname: false
+      # Configure all of the swp* ports
+      network:
+        - ["private_network", {virtualbox__intnet: true}] # swp1
+        - ["private_network", {virtualbox__intnet: true}] # swp2
+        - ["private_network", {virtualbox__intnet: true}] # swp3
+        - ["private_network", {virtualbox__intnet: true}] # swp4
+        - ["private_network", {virtualbox__intnet: true}] # swp5
+        - ["private_network", {virtualbox__intnet: true}] # swp6
+        - ["private_network", {virtualbox__intnet: true}] # swp7
+        - ["private_network", {virtualbox__intnet: true}] # swp8
+        - ["private_network", {virtualbox__intnet: true}] # swp9
+        - ["private_network", {virtualbox__intnet: true}] # swp10
+        - ["private_network", {virtualbox__intnet: true}] # swp11
+        - ["private_network", {virtualbox__intnet: true}] # swp12
+        - ["private_network", {virtualbox__intnet: true}] # swp13
+        - ["private_network", {virtualbox__intnet: true}] # swp14
+        - ["private_network", {virtualbox__intnet: true}] # swp15
+        - ["private_network", {virtualbox__intnet: true}] # swp16
+        - ["private_network", {virtualbox__intnet: true}] # swp17
+        - ["private_network", {virtualbox__intnet: true}] # swp18
+        - ["private_network", {virtualbox__intnet: true}] # swp19
+        - ["private_network", {virtualbox__intnet: true}] # swp20
+        - ["private_network", {virtualbox__intnet: true}] # swp21
+        - ["private_network", {virtualbox__intnet: true}] # swp22
+        - ["private_network", {virtualbox__intnet: true}] # swp23
+        - ["private_network", {virtualbox__intnet: true}] # swp24
+        - ["private_network", {virtualbox__intnet: true}] # swp25
+        - ["private_network", {virtualbox__intnet: true}] # swp26
+        - ["private_network", {virtualbox__intnet: true}] # swp27
+        - ["private_network", {virtualbox__intnet: true}] # swp28
+        - ["private_network", {virtualbox__intnet: true}] # swp29
+        - ["private_network", {virtualbox__intnet: true}] # swp30
+        - ["private_network", {virtualbox__intnet: true}] # swp31
+        - ["private_network", {virtualbox__intnet: true}] # swp32
+        - ["private_network", {virtualbox__intnet: true}] # swp33
+        - ["private_network", {virtualbox__intnet: true}] # swp34
+        - ["private_network", {virtualbox__intnet: true}] # swp35
+
+suites:
+  - name: default
+    run_list:
+    attributes:
