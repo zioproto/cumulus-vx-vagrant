@@ -12,8 +12,6 @@ platforms:
       # Use a box with Chef pre-installed as the default Chef installation
       # script doesn't know how to install Chef on Cumulus
       box: cumulus-vx-2.5.3-chef
-      # Disable this until the vagrant-cumulus plugin supports change_hostname
-      vm_hostname: false
       # Configure all of the swp* ports
       network:
         - ["private_network", {virtualbox__intnet: true}] # swp1
