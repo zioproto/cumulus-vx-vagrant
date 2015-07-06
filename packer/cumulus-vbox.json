@@ -3,7 +3,7 @@
   "variables": {
     "source": "CumulusLinux-2.5.3.ova",
     "name": "cumulus-vx",
-    "version": "2.5.3"
+    "version": "2.5.3",
     "intnet": "intnet"
   },
   "builders": [
