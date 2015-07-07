@@ -1,5 +1,5 @@
 # ceng-packer-vagrant
-Packer &amp; Vagrant configuration for building Vagrant boxes from Cumulus VM Lite OVA file
+Packer &amp; Vagrant configuration for building Vagrant boxes from Cumulus VX OVA file
 
 [Packer](https://www.packer.io/) is a popular tool for modifying and provisioning virtual machines, particularly virtual machine images intended for use with [Vagrant](https://www.vagrantup.com/).
 
