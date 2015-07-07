@@ -54,14 +54,8 @@
           'cl-bgp maximum-paths set 16'
         ]
       - ansible_interfaces
-    when: item[1] != "lo" and item[1] != "eth0"
+    when: item[1] != "lo" and item[1] != "eth0" and item[1] in peer_asn
 
   - name: Announce loopback IP address
     command: "cl-bgp network add {{ loopback_ip }}/32"
     sudo: yes
-    
-    
-
-    
-
-
