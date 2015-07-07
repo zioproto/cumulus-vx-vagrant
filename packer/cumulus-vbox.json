@@ -1,9 +1,11 @@
 {
   "description": "Create a Vagrant box file from the Cumulus Linux virtual machine appliance",
   "variables": {
-    "source": "CumulusLinux-2.5.3.ova",
+    "source": "CumulusLinux.ova",
     "name": "cumulus-vx",
-    "version": "2.5.3",
+    "version": "0.0.0",
+    "suffix": "",
+    "setup_args": "",
     "intnet": "intnet"
   },
   "builders": [
@@ -101,13 +103,13 @@
     {
       "type": "shell",
       "script": "scripts/setup.sh",
-      "execute_command": "chmod +x {{ .Path }};sudo {{ .Vars }} {{ .Path }}" 
+      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}}"
     }
   ],
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "{{user `name`}}-{{user `version`}}-vbox.box"
+      "output": "{{user `name`}}-{{user `suffix`}}-vbox.box"
     }
   ]
 }
