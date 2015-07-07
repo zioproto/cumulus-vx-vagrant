@@ -7,7 +7,8 @@
 # you're doing.
 
 Vagrant.configure("2") do |config|
-  
+  config.vm.box = "cumulus-vx-2.5.3"
+
   # Number of nodes to provision
   numSpines = 2
   numLeaves = 2
@@ -17,13 +18,6 @@ Vagrant.configure("2") do |config|
   
   # IP Address Base for loopback
   ipAddrPrefix = "10.0.1."
-  
-  config.vm.synced_folder '.', '/vagrant', disabled: true
-  config.vm.guest = "debian"
-  config.vm.box = "CumulusVX"
-
-  config.ssh.username = "cumulus"
-  config.ssh.password = "cn321"
   
   # Spine configuration
   1.upto(numSpines) do |num|
@@ -36,8 +30,7 @@ Vagrant.configure("2") do |config|
         leafname = ("l" + leaf.to_s)
         ifname = ("swp" + leaf.to_s)
         node.vm.network "private_network",
-                        virtualbox__intnet: devName + "-" + leafname,
-                        auto_config: false
+                        virtualbox__intnet: devName + "-" + leafname
         peerAsn[ifname] = leafAsnBase + leaf
       end
 
@@ -65,14 +58,9 @@ Vagrant.configure("2") do |config|
         spinename = ("s" + spine.to_s)
         ifname = ("swp" + spine.to_s)
         node.vm.network "private_network",
-                        virtualbox__intnet: spinename + "-" + devName,
-                        auto_config: false
+                        virtualbox__intnet: spinename + "-" + devName
         peerAsn[ifname] = spineAsn
       end
-
-      node.ssh.username = "cumulus"
-      node.ssh.password = "cn321"
-      node.vm.guest = "debian"
 
       node.vm.provision "ansible" do |ansible|
         ansible.extra_vars = {

@@ -7,7 +7,8 @@
 # you're doing.
 
 Vagrant.configure("2") do |config|
-  
+  config.vm.box = "cumulus-vx-2.5.3"
+
   # Number of nodes to provision
   numSpines = 2
   numLeaves = 2
@@ -16,13 +17,6 @@ Vagrant.configure("2") do |config|
   # IP Address Base for loopback
   ipAddrPrefix = "10.0.0."
 
-  config.vm.synced_folder '.', '/vagrant', disabled: true
-  config.vm.guest = "debian"
-  config.vm.box = "CumulusVX"
-
-  config.ssh.username = "cumulus"
-  config.ssh.password = "cn321"
-  
   # Spine definition and config
   1.upto(numSpines) do |num|
     nodeName = ("s" + num.to_s).to_sym
@@ -32,8 +26,7 @@ Vagrant.configure("2") do |config|
       1.upto(numLeaves) do |leaf|
         leafname = ("l" + leaf.to_s)
         node.vm.network "private_network",
-                        virtualbox__intnet: devName + "-" + leafname,
-                        auto_config: false
+                        virtualbox__intnet: devName + "-" + leafname
       end
       
       node.vm.provision "ansible" do |ansible|
@@ -56,8 +49,7 @@ Vagrant.configure("2") do |config|
       1.upto(numSpines) do |spine|
         spinename = ("s" + spine.to_s)
         node.vm.network "private_network",
-                        virtualbox__intnet: spinename + "-" + devName,
-                        auto_config: false
+                        virtualbox__intnet: spinename + "-" + devName
       end
 
       node.vm.provision "ansible" do |ansible|
