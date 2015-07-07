@@ -103,7 +103,7 @@
     {
       "type": "shell",
       "script": "scripts/setup.sh",
-      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}}"
+      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}} -v {{user `version`}}{{user `setup_args`}}"
     }
   ],
   "post-processors": [

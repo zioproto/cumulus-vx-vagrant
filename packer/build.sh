@@ -2,7 +2,7 @@
 
 function usage
 {
-  echo "$0: -o [OVA file] -v [VERSION] (-a|-p|-c)" >&2
+  echo "$0: -o [OVA file] -v [VERSION] [-p|-c]" >&2
   exit 1
 }
 
@@ -15,14 +15,13 @@ function error
 # Defaults
 OVA=""
 VERSION=""
-INSTALL_ANSIBLE=0
 INSTALL_PUPPET=0
 INSTALL_CHEF=0
 SETUP_ARGS=""
 BOX_SUFFIX=""
 
 # Parse options
-while getopts "o:v:apch" OPT
+while getopts "o:v:pch" OPT
 do
   case $OPT in
     o)
@@ -30,9 +29,6 @@ do
       ;;
     v)
       VERSION=$OPTARG
-      ;;
-    a)
-      INSTALL_ANSIBLE=1
       ;;
     p)
       INSTALL_PUPPET=1
@@ -58,11 +54,7 @@ fi
 # Build up some internal variables based on the flags
 BOX_SUFFIX="${VERSION}"
 
-if [ $INSTALL_ANSIBLE -eq 1 ]
-then
-  SETUP_ARGS="${SETUP_ARGS} -a"
-  BOX_SUFFIX="${BOX_SUFFIX}-ansible"
-elif [ $INSTALL_PUPPET -eq 1 ]
+if [ $INSTALL_PUPPET -eq 1 ]
 then
   SETUP_ARGS="${SETUP_ARGS} -p"
   BOX_SUFFIX="${BOX_SUFFIX}-puppet"
