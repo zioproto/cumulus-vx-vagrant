@@ -21,10 +21,14 @@ module VagrantPlugins
         Guest
       end
 
-      # The only thing really different are the interface names
       guest_capability("cumulus", "configure_networks") do
         require_relative "cap/configure_networks"
         Cap::ConfigureNetworks
+      end
+
+      guest_capability("cumulus", "change_host_name") do
+        require_relative "cap/change_host_name"
+        Cap::ChangeHostName
       end
     end
   end
