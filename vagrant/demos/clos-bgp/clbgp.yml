@@ -1,0 +1,67 @@
+---
+- hosts: all
+  tasks:
+
+    # Needed to allow the hostname change to be reflected by lldpd
+  - name: Restart lldpd
+    service: name=lldpd state=restarted
+
+    # Have to do this since since vagrant+vbox assumes interfaces are
+    # named eth0, eth1 etc. We name front panel ports swp1, swp2, etc.
+  - name: Bring up all interfaces
+    command: sudo ip link set up {{ item }}
+    with_items: ansible_interfaces
+
+    # The only address we need
+  - name: Assign IP address to loopback
+    command: sudo ip addr add {{ loopback_ip }} dev lo
+    when: hostvars[inventory_hostname]['ansible_lo']['ipv4_secondaries'] is not defined
+
+  - name: Enable bgpd and zebra
+    replace: dest=/etc/quagga/daemons regexp='(bgpd|zebra)=no' replace='\1=yes' backup=yes
+    sudo: yes
+
+  - name: Write our ASN into bgpd.conf
+    shell: sh -c 'echo router bgp {{ asn }} > /etc/quagga/bgpd.conf'
+    sudo: yes
+
+  - name: Restart quagga
+    service: name=quagga state=restarted
+    sudo: yes
+
+  - name: Assign router-id
+    command: sudo cl-bgp router-id set {{ loopback_ip }}
+
+  - name: Enable IPv6 RA on all interfaces
+    command: "{{ item[0] | replace('%iface%', item[1]) }}"
+    sudo: yes
+    with_nested:
+      - [ 'cl-rctl interface clear %iface% ipv6 nd suppress-ra',
+          'cl-rctl interface set %iface% ipv6 nd ra-interval 5'
+        ]
+      - ansible_interfaces
+    when: item[1] != "lo" and item[1] != "eth0"
+
+  - name: Start BGP session on all interfaces
+    command: "{{ item[0] | replace('%iface%', item[1]) | replace('%asn%', peer_asn[item[1]]) }}"
+    sudo: yes
+    with_nested:
+      - [ 'cl-bgp interface add %iface% ',
+          'cl-bgp neighbor add %iface% remote-as %asn%',
+          'cl-bgp capability set extended-nexthop neighbor %iface% ',
+          'cl-bgp advertisement-interval set 0 neighbor %iface% ',
+          'cl-bgp timers set connect 10 neighbor %iface% ',
+          'cl-bgp maximum-paths set 16'
+        ]
+      - ansible_interfaces
+    when: item[1] != "lo" and item[1] != "eth0"
+
+  - name: Announce loopback IP address
+    command: "cl-bgp network add {{ loopback_ip }}/32"
+    sudo: yes
+    
+    
+
+    
+
+
