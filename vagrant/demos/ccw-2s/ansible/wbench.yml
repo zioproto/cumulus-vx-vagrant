@@ -7,10 +7,37 @@
     - name: "Cumulus sudoers configuration"
       copy: src=files/wbench/cumulus_sudoers dest=/etc/sudoers.d/10_cumulus owner=root group=root mode=0440
 
+    # Add cldemo repositories
+    #- lineinfile: dest=/etc/apt/sources.list.d/cldemo_cumulusnetworks_com_3rdparty_stable.list line="deb http://cldemo.cumulusnetworks.com/3rdparty-stable 3rdparty workbench" create=yes
+    #- lineinfile: dest=/etc/apt/sources.list.d/cldemo_cumulusnetworks_com_stable.list line="deb http://cldemo.cumulusnetworks.com/stable cldemo workbench" create=yes
+
+    - apt_key: data="{{ lookup('file', 'files/wbench/cldemo_key') }}" state=present
+    - apt_repository: repo='deb http://cldemo.cumulusnetworks.com/3rdparty-stable 3rdparty workbench' state=present update_cache=no
+    - apt_repository: repo='deb http://cldemo.cumulusnetworks.com/stable cldemo workbench' state=present update_cache=no
+
+    # Add Brightbox repositories for Ruby 2.x
+    - apt_key: id=C3173AA6 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu precise main' state=present update_cache=no
+
+    # Add Ansible repositories
+    - apt_key: id=7BB9C367 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://ppa.launchpad.net/ansible/ansible/ubuntu precise main' state=present update_cache=no
+
+    # Add PuppetLabs repositories
+    - apt_key: id=07BB6C57 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://apt.puppetlabs.com precise main' state=present update_cache=no
+    - apt_repository: repo='deb http://apt.puppetlabs.com precise dependencies' state=present update_cache=no
+
+    # Update apt
+    - apt: update_cache=yes
+
+    - name: "Install Ruby 2.1"
+      apt: name=ruby2.1 state=present
+
     - name: "Install Apache"
       apt: name=apache2 state=present
 
-    #- name: "Workbench files"
+    # Workbench files
     - copy: src=files/www/cwlicense-v1 dest=/var/www/cwlicense-v1
     - copy: src=files/www/cwlicense-v2 dest=/var/www/cwlicense-v2
     - file: src=cwlicense-v2 dest=/var/www/leaf1.lic state=link
