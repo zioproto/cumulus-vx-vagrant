@@ -1,0 +1,20 @@
+---
+- hosts: wbench
+  tasks:
+    - name: "Re-direct vagrant user"
+      copy: src=files/wbench/bash_profile dest=/home/vagrant/.bash_profile owner=vagrant group=vagrant mode=0644
+
+    - name: "Cumulus sudoers configuration"
+      copy: src=files/wbench/cumulus_sudoers dest=/etc/sudoers.d/10_cumulus owner=root group=root mode=0440
+
+    - name: "Install Apache"
+      apt: name=apache2 state=present
+
+    #- name: "Workbench files"
+    - copy: src=files/www/cwlicense-v1 dest=/var/www/cwlicense-v1
+    - copy: src=files/www/cwlicense-v2 dest=/var/www/cwlicense-v2
+    - file: src=cwlicense-v2 dest=/var/www/leaf1.lic state=link
+    - file: src=cwlicense-v2 dest=/var/www/leaf2.lic state=link
+    - copy: src=files/www/topology-full.dot dest=/var/www/topology-full.dot
+    - file: src=topology-full.dot dest=/var/www/topology.dot state=link
+    - copy: src=files/www/wbench.json dest=/var/www/wbench.json

@@ -1,0 +1,84 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+hosts = { 'wbench' => '192.168.0.1',
+          'leaf1'  => '192.168.0.10',
+          'leaf2'  => '192.168.0.11' }
+
+domain = 'lab.local'
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+
+  config.vm.provision :ansible do |ansible|
+    ansible.extra_vars = {
+      hosts: hosts,
+      domain: domain
+    }
+    ansible.playbook = 'ansible/common.yml'
+    ansible.sudo = true
+  end
+
+  config.vm.define 'wbench' do |wbench|
+    wbench.vm.box = 'ubuntu/precise64'
+    wbench.vm.hostname = "wbench.#{domain}"
+
+    # Internal management network
+    wbench.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['wbench']}", network: "255.255.255.0"
+
+    # Apply workbench specific configuration
+    wbench.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/wbench.yml'
+      ansible.sudo = true
+    end
+  end
+
+  config.vm.define 'leaf1' do |leaf1|
+    leaf1.vm.box = 'cumulus-vx-2.5.3'
+    leaf1.vm.hostname = "leaf1.#{domain}"
+
+    # Internal network for swp* interfaces.
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp1'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp2'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp3'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp4'
+
+    # "spares"
+    (5..34).each do |intf|
+      leaf1.vm.network 'private_network', virtualbox__intnet: 'unused', auto_config: false
+    end
+
+    # Internal management network
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['leaf1']}/24"
+
+    # Provision with a shell script.
+    #leaf1.vm.provision "shell", inline: <<-SHELL
+    #SHELL
+  end
+
+  config.vm.define 'leaf2' do |leaf2|
+    leaf2.vm.box = 'cumulus-vx-2.5.3'
+    leaf2.vm.hostname = "leaf2.#{domain}"
+
+    # Internal network for swp* interfaces.
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp1'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp2'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp3'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp4'
+
+    # "spares"
+    (5..34).each do |intf|
+      leaf2.vm.network 'private_network', virtualbox__intnet: 'unused', auto_config: false
+    end
+
+    # Internal management network
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['leaf2']}/24"
+
+    # Provision with a shell script.
+    #leaf2.vm.provision "shell", inline: <<-SHELL
+    #SHELL
+  end
+end

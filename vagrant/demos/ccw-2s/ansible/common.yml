@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+  - name: "Create Cumulus user"
+    user: name=cumulus shell=/bin/bash password=$6$Zo8LPjgKNFITnmgz$Gh28yidoMIi..grqaO6MDpg0BOULkZpu3Y/kqfWuUSbXlwIN1IxdhAawwFeNlngIHYhrT3RrWfkkWfBjMC.7a. groups=sudo
+
+  - name: "Template hosts file"
+    template: src=templates/hosts.j2 dest=/etc/hosts
