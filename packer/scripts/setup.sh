@@ -35,12 +35,13 @@ function install_guest_additions
     mkdir "$VBOX"
     mount -o loop "$ISO" "$VBOX"
 
+    KERN_VER=$(uname -r)
+
     # Install Guest Additions build dependencies
     apt-get update
-    apt-get install linux-headers
+    apt-get install linux-headers=$KERN_VER
 
     # The current VM image has a dangling symlink which we need to fix up
-    KERN_VER=$(uname -r)
     ln -sf "/usr/src/linux-headers-$KERN_VER" "/lib/modules/$KERN_VER/build"
 
     # Install but ignore a non-0 exit status
