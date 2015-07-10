@@ -51,8 +51,12 @@
     - file: src=topology-full.dot dest=/var/www/topology.dot state=link
     - copy: src=files/www/wbench.json dest=/var/www/wbench.json
 
-    # A (dummy) DHCP server
+    # DHCP server for the management network
     - name: "Install ISC DHCP"
       apt: name=isc-dhcp-server
 
-    - file: dest=/etc/dhcp/dhcpd.pools state=touch
+    - copy: src=files/wbench/dhcpd.pools dest=/etc/dhcp/dhcpd.pools
+    - copy: src=files/wbench/dhcpd.hosts dest=/etc/dhcp/dhcpd.hosts
+    - copy: src=files/wbench/dhcpd.conf dest=/etc/dhcp/dhcpd.conf
+
+    - service: name=isc-dhcp-server state=restarted

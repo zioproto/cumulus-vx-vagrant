@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 hosts = { 'wbench' => '192.168.0.1',
-          'leaf1'  => '192.168.0.10',
-          'leaf2'  => '192.168.0.11' }
+          'leaf1'  => '192.168.0.11',
+          'leaf2'  => '192.168.0.12' }
 
 domain = 'lab.local'
 
@@ -40,8 +40,13 @@ Vagrant.configure(2) do |config|
     leaf1.vm.box = 'cumulus-vx-2.5.3-2s'
     leaf1.vm.hostname = "leaf1.#{domain}"
 
+    # Fix the MAC of the management interface
+    leaf1.vm.provider 'virtualbox' do |vbox|
+      vbox.customize ['modifyvm', :id, '--macaddress2', '08002752fe1e']
+    end
+
     # Internal management network
-    leaf1.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['leaf1']}/24", cumulus__intname: 'eth1'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'mgmt', cumulus__intname: 'eth1', type: 'dhcp'
 
     # Internal network for swp* interfaces.
     leaf1.vm.network 'private_network', virtualbox__intnet: 'swp1', cumulus__intname: 'swp1'
@@ -56,18 +61,19 @@ Vagrant.configure(2) do |config|
     (21..37).each do |intf|
       leaf1.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
     end
-
-    # Provision with a shell script.
-    #leaf1.vm.provision "shell", inline: <<-SHELL
-    #SHELL
   end
 
   config.vm.define 'leaf2' do |leaf2|
     leaf2.vm.box = 'cumulus-vx-2.5.3-2s'
     leaf2.vm.hostname = "leaf2.#{domain}"
 
+    # Fix the MAC of the management interface
+    leaf2.vm.provider 'virtualbox' do |vbox|
+      vbox.customize ['modifyvm', :id, '--macaddress2', '08002752fe1f']
+    end
+
     # Internal management network
-    leaf2.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['leaf2']}/24", cumulus__intname: 'eth1'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'mgmt', cumulus__intname: 'eth1', type: 'dhcp'
 
     # Internal network for swp* interfaces.
     leaf2.vm.network 'private_network', virtualbox__intnet: 'swp1', cumulus__intname: 'swp1'
@@ -82,9 +88,5 @@ Vagrant.configure(2) do |config|
     (21..37).each do |intf|
       leaf2.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
     end
-
-    # Provision with a shell script.
-    #leaf2.vm.provision "shell", inline: <<-SHELL
-    #SHELL
   end
 end

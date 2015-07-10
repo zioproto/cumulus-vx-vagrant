@@ -1,0 +1,11 @@
+# static DHCP hosts
+host leaf1 {
+  hardware ethernet   08:00:27:52:fe:1e;
+  fixed-address       192.168.0.11;
+  option host-name    "leaf1";
+}
+host leaf2 {
+  hardware ethernet   08:00:27:52:fe:1f;
+  fixed-address       192.168.0.12;
+  option host-name    "leaf2";
+}
