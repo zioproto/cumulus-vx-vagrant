@@ -1,0 +1,60 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          rename_mgmt_intf
+# Required-Start:
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# X-Start-Before:    ifupdown arp_refresh
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Swap eth0 & eth1 interfaces
+### END INIT INFO
+
+# Author: Kristian Van Der Vliet <kristian@cumulusnetworks.com>
+#
+# Please remove the "Author" lines above and replace them
+# with your own name if you copy and modify this script.
+
+PATH=/sbin:/bin:/usr/bin
+
+NAME=rename_mgmt_intf
+SCRIPTNAME=/etc/init.d/$NAME
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+
+do_start() {
+  # Move eth1 out of the way, rename eth0 as eth1,
+  # then rename the old eth1 to eth0
+  ifdown eth0
+  ifdown eth1
+
+  ip link set eth1 name eth99
+  ip link set eth0 name eth1
+  ip link set eth99 name eth0
+
+  ifup eth1
+  ifup eth0
+}
+
+case "$1" in
+  start|"")
+	log_action_begin_msg "Renaming interfaces"
+	do_start
+	log_action_end_msg 0
+	;;
+  restart|reload|force-reload)
+	echo "Error: argument '$1' not supported" >&2
+	exit 3
+	;;
+  stop)
+	# No-op
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME [start|stop]" >&2
+	exit 3
+	;;
+esac
+
+:
