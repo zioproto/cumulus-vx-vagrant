@@ -61,6 +61,12 @@ Vagrant.configure(2) do |config|
     (21..37).each do |intf|
       leaf1.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
     end
+
+    # Apply leaf switch specific configuration
+    leaf1.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/leaf.yml'
+      ansible.sudo = true
+    end
   end
 
   config.vm.define 'leaf2' do |leaf2|
@@ -87,6 +93,12 @@ Vagrant.configure(2) do |config|
     end
     (21..37).each do |intf|
       leaf2.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
+    end
+
+    # Apply leaf switch specific configuration
+    leaf2.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/leaf.yml'
+      ansible.sudo = true
     end
   end
 end
