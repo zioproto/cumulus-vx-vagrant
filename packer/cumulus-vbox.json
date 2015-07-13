@@ -6,6 +6,7 @@
     "version": "0.0.0",
     "suffix": "",
     "setup_args": "",
+    "netmap": "none",
     "intnet": "intnet"
   },
   "builders": [
@@ -100,6 +101,21 @@
     }
   ],
   "provisioners": [
+    {
+      "type": "file",
+      "source": "files/rename_mgmt_intf",
+      "destination": "/tmp/rename_mgmt_intf"
+    },
+    {
+      "type": "file",
+      "source": "files/rename_eth_swp",
+      "destination": "/tmp/rename_eth_swp"
+    },
+    {
+      "type": "file",
+      "source": "files/maps/{{user `netmap`}}",
+      "destination": "/tmp/eth_remap"
+    },
     {
       "type": "shell",
       "script": "scripts/setup.sh",

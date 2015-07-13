@@ -2,7 +2,7 @@
 
 function usage
 {
-  echo "$0: -o [OVA file] -v [VERSION] [-p|-c]" >&2
+  echo "$0: -o [OVA file] -v [VERSION] [-p|-c] [-t TYPE]" >&2
   exit 1
 }
 
@@ -19,9 +19,10 @@ INSTALL_PUPPET=0
 INSTALL_CHEF=0
 SETUP_ARGS=""
 BOX_SUFFIX=""
+TYPE="none"
 
 # Parse options
-while getopts "o:v:pch" OPT
+while getopts "o:v:pct:h" OPT
 do
   case $OPT in
     o)
@@ -35,6 +36,9 @@ do
       ;;
     c)
       INSTALL_CHEF=1
+      ;;
+    t)
+      TYPE=$OPTARG
       ;;
     h|\?)
       usage
@@ -64,9 +68,24 @@ then
   BOX_SUFFIX="${BOX_SUFFIX}-chef"
 fi
 
+# Allow users to specify a special "type" of box I.e. a 2s leaf, a 2lt22s
+# spine; this changes how the NICs are re-mapped within the VM. Default is
+# "none" with always performs the "simple" remap method.
+if [ "$TYPE" != "none" ]
+then
+  case $TYPE in
+    "2s")
+      ;;
+    *)
+      echo "Invalid type $TYPE"
+      ;;
+  esac
+  BOX_SUFFIX="${BOX_SUFFIX}-${TYPE}"
+fi
+
 packer build -var "source=$OVA" \
              -var "version=$VERSION" \
              -var "suffix=$BOX_SUFFIX" \
              -var "setup_args=$SETUP_ARGS" \
+             -var "netmap=$TYPE" \
              cumulus-vbox.json
-
