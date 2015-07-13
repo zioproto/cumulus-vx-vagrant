@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
   # Stop the Virtualbox NAT interface setting DNS via. DHCP
-  - copy: src=files/resolv-conf dest=/etc/dhcp/dhclient-enter-hooks.d/resolv-conf owner=root group=root mode=0755
+  - copy: src=files/leaf/resolv-conf dest=/etc/dhcp/dhclient-enter-hooks.d/resolv-conf owner=root group=root mode=0755
 
   - name: "Rename management interfaces"
     service: name=rename_mgmt_intf enabled=yes state=started
