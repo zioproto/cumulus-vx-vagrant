@@ -20,6 +20,7 @@ INSTALL_CHEF=0
 SETUP_ARGS=""
 BOX_SUFFIX=""
 TYPE="none"
+PACKER_CONFIG="cumulus-vbox.json"
 
 # Parse options
 while getopts "o:v:pct:h" OPT
@@ -75,6 +76,7 @@ if [ "$TYPE" != "none" ]
 then
   case $TYPE in
     "2s")
+      PACKER_CONFIG="cumulus-vbox-ceng.json"
       ;;
     *)
       echo "Invalid type $TYPE"
@@ -88,4 +90,4 @@ packer build -var "source=$OVA" \
              -var "suffix=$BOX_SUFFIX" \
              -var "setup_args=$SETUP_ARGS" \
              -var "netmap=$TYPE" \
-             cumulus-vbox.json
+             $PACKER_CONFIG

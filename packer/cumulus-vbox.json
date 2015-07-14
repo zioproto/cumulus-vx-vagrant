@@ -102,21 +102,6 @@
   ],
   "provisioners": [
     {
-      "type": "file",
-      "source": "files/rename_mgmt_intf",
-      "destination": "/tmp/rename_mgmt_intf"
-    },
-    {
-      "type": "file",
-      "source": "files/rename_eth_swp",
-      "destination": "/tmp/rename_eth_swp"
-    },
-    {
-      "type": "file",
-      "source": "files/maps/{{user `netmap`}}",
-      "destination": "/tmp/eth_remap"
-    },
-    {
       "type": "shell",
       "script": "scripts/setup.sh",
       "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}} -v {{user `version`}}{{user `setup_args`}}"

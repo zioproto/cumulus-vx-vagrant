@@ -57,27 +57,6 @@ function install_guest_additions
   fi
 }
 
-# Install any additional network configuration scripts which have been added
-# to the VM
-function network_setup
-{
-  for SCRIPT in rename_eth_swp rename_mgmt_intf
-  do
-    if [ -e /tmp/$SCRIPT ]
-    then
-      mv /tmp/$SCRIPT /etc/init.d/
-      chown root:root /etc/init.d/$SCRIPT
-      chmod 0755 /etc/init.d/$SCRIPT
-    fi
-  done
-
-  if [ -e /tmp/eth_remap ]
-  then
-    mv /tmp/eth_remap /etc/default/
-    chown root:root /etc/default/eth_remap
-  fi
-}
-
 # Install Puppet client
 function install_puppet
 {
@@ -99,7 +78,6 @@ function install_chef
 # Defaults
 WANT_VAGRANT_USER=1
 WANT_VBOX_ADDITIONS=1
-WANT_NETWORK_SETUP=1
 INSTALL_PUPPET=0
 PUPPET_VERSION=""
 INSTALL_CHEF=0
@@ -137,10 +115,6 @@ fi
 if [ $WANT_VBOX_ADDITIONS -ne 0 ]
 then
   install_guest_additions
-fi
-if [ $WANT_NETWORK_SETUP -ne 0 ]
-then
-  network_setup
 fi
 if [ $INSTALL_PUPPET -ne 0 ]
 then
