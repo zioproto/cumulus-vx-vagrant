@@ -1,0 +1,4 @@
+127.0.0.1 localhost
+{% for host, ip in hosts.iteritems() %}
+{{ ip }} {{ host }} {{ host }}.{{ domain }}
+{% endfor %}

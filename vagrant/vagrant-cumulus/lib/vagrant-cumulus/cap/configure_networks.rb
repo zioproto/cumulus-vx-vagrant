@@ -10,6 +10,10 @@ module VagrantPlugins
       class ConfigureNetworks
         include Vagrant::Util
 
+        def self.vm_network_config(machine, interface)
+          machine.config.vm.networks[interface-1]
+        end
+
         def self.configure_networks(machine, networks)
           machine.communicate.tap do |comm|
             # First, remove any previous network modifications
@@ -25,7 +29,12 @@ module VagrantPlugins
             networks.each do |network|
               interfaces.add(network[:interface])
 
-              network[:name] = network[:interface] == 0 ? 'eth' : 'swp'
+              type, config = vm_network_config(machine, network[:interface])
+              if config[:cumulus__intname]
+                network[:name] = config[:cumulus__intname]
+              else
+                network[:name] = network[:interface] == 0 ? 'eth0' : "swp#{network[:interface]}"
+              end
 
               entry = TemplateRenderer.render("guests/cumulus/network_#{network[:type]}",
                                               options: network,

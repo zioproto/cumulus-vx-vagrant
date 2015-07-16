@@ -1,0 +1,61 @@
+{
+    "reservation": {
+        "id": 1,
+        "request_status": "provisioned",
+        "customer": "Cumulus VX",
+        "customer_email": "info@cumulusnetworks.com",
+        "cumulus_contact": "Cumulus VX",
+        "created": "2015-7-01 0:0:0",
+        "start_date": "2015-7-01 0:0:0",
+        "end_date": "2099-31-12 0:0:0",
+        "provisioned_date": "2015-7-01 0:0:0",
+        "lic_accepted": true,
+        "workbench": {
+            "switches": {
+                "leaf1": {
+                    "console_muxport": 1001,
+                    "mac": "FF:AA:FF:AA:FF:A1",
+                    "model": "cumulus_vx",
+                    "serialno": "ABCDEF1",
+                    "platform": "x86-64"
+                },
+                "leaf2": {
+                    "console_muxport": 1002,
+                    "mac": "FF:AA:FF:AA:FF:A2",
+                    "model": "cumulus_vx",
+                    "serialno": "UVWXYZ1",
+                    "platform": "x86-64"
+                }
+            },
+            "servers": {},
+            "generation": "legacy",
+            "user": "wbench",
+            "api_key": "",
+            "api_url": "https://127.0.0.1:8008/api/",
+            "switcharr": {
+                "leaf1": 1,
+                "leaf2": 2
+            },
+            "wbench_id": 999,
+            "wbench_class": "2s",
+            "sshport": 22,
+            "username": "cumulus",
+            "password": "CumulusLinux!",
+            "internal_tcp_port": 9999,
+            "internal_udp_port": 9999,
+            "external_tcp_port": 8391,
+            "external_udp_port": 8391,
+            "topology": {
+                "leaf1": {
+                    "leaf2": [
+                        "swp1::swp1",
+                        "swp2::swp2",
+                        "swp3::swp3",
+                        "swp4::swp4"
+                    ]
+                }
+            },
+            "wbench_class_base": "2s"
+        }
+    }
+}

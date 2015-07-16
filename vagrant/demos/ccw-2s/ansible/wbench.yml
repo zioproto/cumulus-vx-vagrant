@@ -1,0 +1,75 @@
+---
+- hosts: wbench
+  tasks:
+    - name: "Re-direct vagrant user"
+      copy: src=files/wbench/bash_profile dest=/home/vagrant/.bash_profile owner=vagrant group=vagrant mode=0644
+
+    - name: "Cumulus sudoers configuration"
+      copy: src=files/wbench/cumulus_sudoers dest=/etc/sudoers.d/10_cumulus owner=root group=root mode=0440
+
+    # Enable multiverse & backports
+    - apt_repository: repo='deb http://archive.ubuntu.com/ubuntu precise multiverse' state=present update_cache=no
+    - apt_repository: repo='deb http://archive.ubuntu.com/ubuntu precise-updates multiverse' state=present update_cache=no
+    - apt_repository: repo='deb http://archive.ubuntu.com/ubuntu precise-backports main restricted universe multiverse' state=present update_cache=no
+
+    # Add cldemo repositories
+    - apt_key: data="{{ lookup('file', 'files/wbench/cldemo_key') }}" state=present
+    - apt_repository: repo='deb http://cldemo.cumulusnetworks.com/3rdparty-stable 3rdparty workbench' state=present update_cache=no
+    - apt_repository: repo='deb http://cldemo.cumulusnetworks.com/stable cldemo workbench' state=present update_cache=no
+
+    # Add Brightbox repositories for Ruby 2.x
+    - apt_key: id=C3173AA6 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu precise main' state=present update_cache=no
+
+    # Add Ansible repositories
+    - apt_key: id=7BB9C367 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://ppa.launchpad.net/ansible/ansible/ubuntu precise main' state=present update_cache=no
+
+    # Add PuppetLabs repositories
+    - apt_key: id=4BD6EC30 keyserver=keyserver.ubuntu.com state=present
+    - apt_key: id=07BB6C57 keyserver=keyserver.ubuntu.com state=present
+    - apt_repository: repo='deb http://apt.puppetlabs.com precise main' state=present update_cache=no
+    - apt_repository: repo='deb http://apt.puppetlabs.com precise dependencies' state=present update_cache=no
+
+    # Update apt
+    - apt: update_cache=yes
+
+    - name: "Install Ruby 2.1"
+      apt: name=ruby2.1 state=present
+
+    - command: /usr/bin/gem install bundler
+
+    - name: "Install Apache"
+      apt: name=apache2 state=present
+
+    # Workbench files
+    - copy: src=files/www/cwlicense-v1 dest=/var/www/cwlicense-v1
+    - copy: src=files/www/cwlicense-v2 dest=/var/www/cwlicense-v2
+    - file: src=cwlicense-v2 dest=/var/www/leaf1.lic state=link
+    - file: src=cwlicense-v2 dest=/var/www/leaf2.lic state=link
+    - copy: src=files/www/topology-full.dot dest=/var/www/topology-full.dot
+    - file: src=topology-full.dot dest=/var/www/topology.dot state=link
+    - copy: src=files/www/wbench.json dest=/var/www/wbench.json
+
+    # DHCP server for the management network
+    - name: "Install ISC DHCP"
+      apt: name=isc-dhcp-server
+
+    - copy: src=files/wbench/dhcpd/dhcpd.pools dest=/etc/dhcp/dhcpd.pools
+    - copy: src=files/wbench/dhcpd/dhcpd.hosts dest=/etc/dhcp/dhcpd.hosts
+    - copy: src=files/wbench/dhcpd/dhcpd.conf dest=/etc/dhcp/dhcpd.conf
+
+    - service: name=isc-dhcp-server state=restarted
+
+    # DNS server for the management network
+    - name: "Install Bind"
+      apt: name=bind9
+
+    - file: path=/etc/bind/zones state=directory owner=bind group=bind mode=0755
+    - copy: src=files/wbench/bind/mgmt_zone dest=/etc/bind/zones/db.0.168.192.in-addr.arpa
+    - copy: src=files/wbench/bind/lab_zone dest=/etc/bind/zones/db.lab.local
+    - copy: src=files/wbench/bind/named.conf.local dest=/etc/bind/named.conf.local
+
+    - service: name=bind9 state=restarted
+
+    - copy: content="domain lab.local\nsearch lab.local\nnameserver 127.0.0.1" dest=/etc/resolv.conf

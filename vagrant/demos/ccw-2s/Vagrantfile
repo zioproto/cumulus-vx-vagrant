@@ -1,0 +1,104 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+hosts = { 'wbench' => '192.168.0.1',
+          'leaf1'  => '192.168.0.11',
+          'leaf2'  => '192.168.0.12' }
+
+domain = 'lab.local'
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+
+  config.vm.provision :ansible do |ansible|
+    ansible.extra_vars = {
+      hosts: hosts,
+      domain: domain
+    }
+    ansible.playbook = 'ansible/common.yml'
+    ansible.sudo = true
+  end
+
+  config.vm.define 'wbench' do |wbench|
+    wbench.vm.box = 'ubuntu/precise64'
+    wbench.vm.hostname = "wbench.#{domain}"
+
+    # Internal management network
+    wbench.vm.network 'private_network', virtualbox__intnet: 'mgmt', ip: "#{hosts['wbench']}", network: "255.255.255.0"
+
+    # Apply workbench specific configuration
+    wbench.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/wbench.yml'
+      ansible.sudo = true
+    end
+  end
+
+  config.vm.define 'leaf1' do |leaf1|
+    leaf1.vm.box = 'cumulus-vx-2.5.3-2s'
+    leaf1.vm.hostname = "leaf1.#{domain}"
+
+    # Fix the MAC of the management interface
+    leaf1.vm.provider 'virtualbox' do |vbox|
+      vbox.customize ['modifyvm', :id, '--macaddress2', '08002752fe1e']
+    end
+
+    # Internal management network
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'mgmt', cumulus__intname: 'eth1', type: 'dhcp'
+
+    # Internal network for swp* interfaces.
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp1', cumulus__intname: 'swp1'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp2', cumulus__intname: 'swp2'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp3', cumulus__intname: 'swp3'
+    leaf1.vm.network 'private_network', virtualbox__intnet: 'swp4', cumulus__intname: 'swp4'
+
+    # "spares"
+    (5..17).each do |intf|
+      leaf1.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
+    end
+    (21..37).each do |intf|
+      leaf1.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
+    end
+
+    # Apply leaf switch specific configuration
+    leaf1.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/leaf.yml'
+      ansible.sudo = true
+    end
+  end
+
+  config.vm.define 'leaf2' do |leaf2|
+    leaf2.vm.box = 'cumulus-vx-2.5.3-2s'
+    leaf2.vm.hostname = "leaf2.#{domain}"
+
+    # Fix the MAC of the management interface
+    leaf2.vm.provider 'virtualbox' do |vbox|
+      vbox.customize ['modifyvm', :id, '--macaddress2', '08002752fe1f']
+    end
+
+    # Internal management network
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'mgmt', cumulus__intname: 'eth1', type: 'dhcp'
+
+    # Internal network for swp* interfaces.
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp1', cumulus__intname: 'swp1'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp2', cumulus__intname: 'swp2'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp3', cumulus__intname: 'swp3'
+    leaf2.vm.network 'private_network', virtualbox__intnet: 'swp4', cumulus__intname: 'swp4'
+
+    # "spares"
+    (5..17).each do |intf|
+      leaf2.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
+    end
+    (21..37).each do |intf|
+      leaf2.vm.network 'private_network', virtualbox__intnet: 'unused', cumulus__intname: "swp#{intf}", auto_config: false
+    end
+
+    # Apply leaf switch specific configuration
+    leaf2.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/leaf.yml'
+      ansible.sudo = true
+    end
+  end
+end

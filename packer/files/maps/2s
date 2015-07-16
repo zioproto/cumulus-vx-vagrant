@@ -1,0 +1,41 @@
+# Which method to use to re-map the NICs
+# Options are "simple", which just renumberes ethN->swpN, or "mapped" which
+# uses the array below to re-map ethN names.
+REMAP_METHOD="mapped"
+
+# Map of ethN names to new names. The new name can be anything you like, as
+# long as the kernel accepts it.
+MAP="eth2=swp1
+     eth3=swp2
+     eth4=swp3
+     eth5=swp4
+     eth6=swp5
+     eth7=swp6
+     eth8=swp7
+     eth9=swp8
+     eth10=swp9
+     eth11=swp10
+     eth12=swp11
+     eth13=swp12
+     eth14=swp13
+     eth15=swp14
+     eth16=swp15
+     eth17=swp16
+     eth18=swp17
+     eth19=swp21
+     eth20=swp22
+     eth21=swp23
+     eth22=swp24
+     eth23=swp25
+     eth24=swp26
+     eth25=swp27
+     eth26=swp28
+     eth27=swp29
+     eth28=swp30
+     eth29=swp31
+     eth30=swp32
+     eth31=swp33
+     eth32=swp34
+     eth33=swp35
+     eth34=swp36
+     eth35=swp37"

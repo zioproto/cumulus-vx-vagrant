@@ -103,9 +103,29 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "files/init/",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "files/maps/{{user `netmap`}}",
+      "destination": "/tmp/eth_remap"
+    },
+    {
+      "type": "file",
+      "source": "files/fake_tools",
+      "destination": "/tmp"
+    },
+    {
       "type": "shell",
       "script": "scripts/setup.sh",
       "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}} -v {{user `version`}}{{user `setup_args`}}"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/ceng.sh",
+      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}}"
     }
   ],
   "post-processors": [

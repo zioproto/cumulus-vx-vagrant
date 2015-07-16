@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+  - name: "Create Cumulus user"
+    user: name=cumulus shell=/bin/bash password=$6$Zo8LPjgKNFITnmgz$Gh28yidoMIi..grqaO6MDpg0BOULkZpu3Y/kqfWuUSbXlwIN1IxdhAawwFeNlngIHYhrT3RrWfkkWfBjMC.7a. groups=sudo
+
+  # Install SSH keys for the Cumulus user
+  - authorized_key: user=cumulus key="{{ lookup('file', 'files/id_rsa.pub') }}"
+  - copy: src=files/id_rsa dest=/home/cumulus/.ssh/id_rsa owner=cumulus group=cumulus mode=0600
+  - copy: src=files/id_rsa.pub dest=/home/cumulus/.ssh/id_rsa.pub owner=cumulus group=cumulus mode=0644
+
+  # Install SSH keys for the root user
+  - authorized_key: user=root key="{{ lookup('file', 'files/id_rsa.pub') }}"
+  - copy: src=files/id_rsa dest=/root/.ssh/id_rsa owner=root group=root mode=0600
+  - copy: src=files/id_rsa.pub dest=/root/.ssh/id_rsa.pub owner=root group=root mode=0644
+
+  - name: "Template hosts file"
+    template: src=templates/hosts.j2 dest=/etc/hosts
