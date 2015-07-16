@@ -81,7 +81,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 
 # Cumulus Linux box and memory size
-CL_BOX_FILE     = "http://monster-12.cumulusnetworks.com/work/monster-12/scotte/vboxes/CumulusLinux-2.5.3.box"
+CL_BOX_FILE     = "cumulus-vx-2.5.3"
 CL_MEMORY       = 192   # Seems to be enough, increase if OOM messages appear in syslog
 
 # Host box and memory size
