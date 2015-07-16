@@ -21,11 +21,18 @@ You can choose to install either Puppet or Chef using one of the following optio
 * `-p`: Install Puppet
 * `-c`: Install Chef
 
-The build process will insert "puppet" or "chef" into the Vagrant box filename as appropriate. The Vagrant box naming scheme is as follows:
+The build process will insert "puppet" or "chef" into the Vagrant box filename as appropriate. For example, to build a box file with Puppet pre-installed:
 
-* cumulus-vx-2.5.3-vbox        - "Standard" Cumulus VX box file with no additional software (E.g. Puppet or Chef) pre-installed
-* cumulus-vx-2.5.3-chef-vbox   - Cumulus VX with Chef pre-installed
-* cumulus-vx-2.5.3-puppet-vbox - Cumulus VX with Puppet pre-installed
+```
+$ ./build.sh -o CumulusLinux-2.5.3.ova -v 2.5.3 -p
+```
+This will produce a box file called `cumulus-vx-2.5.3-puppet-vbox.box`
+
+The Vagrant box naming scheme is as follows:
+
+* `cumulus-vx-2.5.3-vbox`        - "Standard" Cumulus VX box file with no additional software (E.g. Puppet or Chef) pre-installed
+* `cumulus-vx-2.5.3-chef-vbox`   - Cumulus VX with Chef pre-installed
+* `cumulus-vx-2.5.3-puppet-vbox` - Cumulus VX with Puppet pre-installed
 
 ## Files
 
