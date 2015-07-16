@@ -39,7 +39,7 @@ The source for the Cumulus specific Vagrant guest plugin.
 
 #### demos
 
-Complete examples of using Cumulus VX with Vagrant and Ansible to create and configure multi-VM OSPF & BGP topologies.
+Complete examples of using Cumulus VX with Vagrant and Ansible to create and configure multi-VM OSPF,  BGP, and MLAG topologies.
 
 ### test-kitchen
 
