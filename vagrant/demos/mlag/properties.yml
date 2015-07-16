@@ -1,0 +1,14 @@
+
+#-------------------------------------------------------------------------------
+#
+# Copyright 2015 Cumulus Networks, inc  all rights reserved
+#
+#-------------------------------------------------------------------------------
+
+# Number of nodes to provision. Change these values to modify the size of the
+# network configuration. Be careful, changing these values can dramatically 
+# affect the number of VMs created.
+
+:hostsPerRack: 5
+:racksPerPod:  2
+:podsPerDC:    1
