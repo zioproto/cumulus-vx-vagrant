@@ -1,0 +1,4 @@
+This demo creates a facsimile of a 2-switch Cumulus Customer Workbench. This
+includes 2 "leaf" switches with swp1-swp4 connected together, and a
+workbench virtual machine configured appropriately. You can install & use
+Cumulus demos which work on a 2s switch topology.
