@@ -7,7 +7,7 @@
     "suffix": "",
     "setup_args": "",
     "netmap": "none",
-    "nic_type": "82543GC",
+    "nic_type": "virtio",
     "intnet": "intnet"
   },
   "builders": [
