@@ -1,0 +1,5 @@
+:numLeaves: 2
+:numSpines: 2
+  
+# IP Address Base for loopback
+:ipAddrPrefix: "10.0.1."
