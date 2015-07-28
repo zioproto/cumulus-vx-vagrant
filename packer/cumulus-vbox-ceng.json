@@ -8,7 +8,8 @@
     "setup_args": "",
     "netmap": "none",
     "nic_type": "virtio",
-    "intnet": "intnet"
+    "intnet": "intnet",
+    "password": "CumulusLinux!"
   },
   "builders": [
     {
@@ -96,9 +97,9 @@
       ],
       "headless": true,
       "ssh_username": "cumulus",
-      "ssh_password": "cn321",
+      "ssh_password": "{{user `password`}}",
       "ssh_wait_timeout": "30s",
-      "shutdown_command": "sudo -S shutdown -h now"
+      "shutdown_command": "echo '{{user `password`}}' | sudo -S shutdown -h now"
     }
   ],
   "provisioners": [
@@ -120,12 +121,12 @@
     {
       "type": "shell",
       "script": "scripts/setup.sh",
-      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}} -v {{user `version`}}{{user `setup_args`}}"
+      "execute_command": "chmod +x {{.Path}};echo '{{user `password`}}' | {{.Vars}} sudo -S -E {{.Path}} -v {{user `version`}}{{user `setup_args`}}"
     },
     {
       "type": "shell",
       "script": "scripts/ceng.sh",
-      "execute_command": "chmod +x {{.Path}};sudo {{.Vars}} {{.Path}}"
+      "execute_command": "chmod +x {{.Path}};echo '{{user `password`}}' | {{.Vars}} sudo -S -E {{.Path}}"
     }
   ],
   "post-processors": [

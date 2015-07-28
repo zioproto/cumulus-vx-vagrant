@@ -20,6 +20,11 @@ _EOF
   chown -R vagrant:vagrant $HOMEDIR/.ssh
   chmod 0700 $HOMEDIR/.ssh
   chmod 0600 $HOMEDIR/.ssh/authorized_keys
+
+  # Allow vagrant to have passwordless sudo
+  cat << _EOF > /etc/sudoers.d/50-vagrant
+vagrant ALL=(ALL) NOPASSWD:ALL
+_EOF
 }
 
 # Install the VirtualBox guest additions
