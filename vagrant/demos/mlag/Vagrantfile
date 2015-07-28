@@ -291,8 +291,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box_check_update = false
     config.vm.synced_folder '.', '/vagrant', disabled: true
     config.vm.guest = "debian"
-    config.ssh.username = "cumulus"
-    config.ssh.password = "cn321"
 
     # Configure the Pods
     1.upto(podsPerDC) do |podNum|
