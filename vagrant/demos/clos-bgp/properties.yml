@@ -1,0 +1,7 @@
+:numLeaves: 2
+:numSpines: 2
+:spineAsn: 65001
+:leafAsnBase: 64501
+  
+# IP Address Base for loopback
+:ipAddrPrefix: "10.0.1."
