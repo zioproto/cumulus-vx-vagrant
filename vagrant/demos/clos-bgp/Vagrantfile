@@ -6,39 +6,36 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 
+require 'yaml'
+
 Vagrant.configure("2") do |config|
+  properties = YAML.load_file("properties.yml")
+
   config.vm.box = "cumulus-vx-2.5.3"
 
   # Number of nodes to provision
-  numSpines = 2
-  numLeaves = 2
   iter = 1
-  spineAsn = 65001
-  leafAsnBase = 64501
-  
-  # IP Address Base for loopback
-  ipAddrPrefix = "10.0.1."
   
   # Spine configuration
-  1.upto(numSpines) do |num|
+  1.upto(properties[:numSpines]) do |num|
     nodeName = ("s" + num.to_s).to_sym
     devName = ("s" + num.to_s)
     peerAsn = Hash.new
     config.vm.define nodeName do |node|
       node.vm.host_name = devName
-      1.upto(numLeaves) do |leaf|
+      1.upto(properties[:numLeaves]) do |leaf|
         leafname = ("l" + leaf.to_s)
         ifname = ("swp" + leaf.to_s)
         node.vm.network "private_network",
                         virtualbox__intnet: devName + "-" + leafname
-        peerAsn[ifname] = leafAsnBase + leaf
+        peerAsn[ifname] = properties[:leafAsnBase] + leaf
       end
 
       node.vm.provision "ansible" do |ansible|
         ansible.extra_vars = {
-          loopback_ip: ipAddrPrefix + iter.to_s,
-          asn: spineAsn,
-          peer_asn: peerAsn
+          loopback_ip: properties[:ipAddrPrefix] + iter.to_s,
+          asn: properties[:spineAsn],
+          peer_asn: peerAsn,
         }
         ansible.playbook = "clbgp.yml"
       end
@@ -48,24 +45,24 @@ Vagrant.configure("2") do |config|
   end
 
   # Leaf configuration
-  1.upto(numLeaves) do |num|
+  1.upto(properties[:numLeaves]) do |num|
     nodeName = ("l" + num.to_s).to_sym
     devName = ("l" + num.to_s)
     peerAsn = Hash.new
     config.vm.define nodeName do |node|
       node.vm.host_name = devName
-      1.upto(numSpines) do |spine|
+      1.upto(properties[:numSpines]) do |spine|
         spinename = ("s" + spine.to_s)
         ifname = ("swp" + spine.to_s)
         node.vm.network "private_network",
                         virtualbox__intnet: spinename + "-" + devName
-        peerAsn[ifname] = spineAsn
+        peerAsn[ifname] = properties[:spineAsn]
       end
 
       node.vm.provision "ansible" do |ansible|
         ansible.extra_vars = {
-          loopback_ip: ipAddrPrefix + iter.to_s,
-          asn: leafAsnBase + num,
+          loopback_ip: properties[:ipAddrPrefix] + iter.to_s,
+          asn: properties[:leafAsnBase] + num,
           peer_asn: peerAsn
         }
         ansible.playbook = "clbgp.yml"
