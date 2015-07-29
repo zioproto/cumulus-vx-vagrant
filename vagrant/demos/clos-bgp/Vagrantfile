@@ -12,9 +12,7 @@ Vagrant.configure("2") do |config|
   properties = YAML.load_file("properties.yml")
 
   config.vm.box = "cumulus-vx-2.5.3"
-  config.ssh.username = "cumulus"
-  config.ssh.password = "cn321"
-  
+
   # Number of nodes to provision
   iter = 1
   
