@@ -9,9 +9,12 @@ provisioner:
 platforms:
   - name: cumulus-vx-2.5.3
     driver:
-      # Use a box with Chef pre-installed as the default Chef installation
-      # script doesn't know how to install Chef on Cumulus
-      box: cumulus-vx-2.5.3-chef
+      box: cumulus-vx-2.5.3
+
+      # Install Chef from the Cumulus APT repository
+      provision: true
+      vagrantfiles: ['provision-chef.rb']
+
       # Configure all of the swp* ports
       network:
         - ["private_network", {virtualbox__intnet: true}] # swp1
