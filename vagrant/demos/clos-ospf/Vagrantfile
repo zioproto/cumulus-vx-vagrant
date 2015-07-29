@@ -13,9 +13,6 @@ Vagrant.configure("2") do |config|
 
   properties = YAML.load_file("properties.yml")
   
-  config.ssh.username = "cumulus"
-  config.ssh.password = "CumulusLinux!"
-  
   # Number of nodes to provision
   iter = 1
 

@@ -36,7 +36,7 @@ end
         1.upto(property[:hostsPerRack]) do |hostNum|
         host = (podNum-1)*(property[:racksPerPod]*(property[:hostsPerRack]+2)+2) + 
                (rackNum-1)*(property[:hostsPerRack]+2) + hostNum
-            describe host('10.99.%d.%d.' % [host / 256, host % 256]) do
+            describe host('10.99.%d.%d' % [host / 256, host % 256]) do
                 it { should be_reachable }
             end
         end
