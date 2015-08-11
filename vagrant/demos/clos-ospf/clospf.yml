@@ -34,4 +34,7 @@
     with_items:
       - sudo cl-ospf interface set lo passive
       - sudo cl-ospf interface set lo area 0.0.0.0
-    
+
+  - name: Save configuration to file
+    command: sudo cl-rctl write-config
+
