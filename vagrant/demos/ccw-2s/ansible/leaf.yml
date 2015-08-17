@@ -6,3 +6,5 @@
 
   - name: "Rename management interfaces"
     service: name=rename_mgmt_intf enabled=yes state=started
+    async: 10
+    poll: 0
