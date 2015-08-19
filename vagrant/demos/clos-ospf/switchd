@@ -1,0 +1,31 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          switchd
+# Required-Start:    $network 
+# Required-Stop:     $network 
+# Should-Start:      switchd
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+case "$1" in
+    start)
+	exit 0
+    ;;
+    stop)
+	exit 0
+    ;;
+    reload)
+	exit 0
+    ;;
+    status)
+	exit 0
+        status_puppet_agent
+    ;;
+    restart|force-reload)
+	exit 0
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart|force-reload|reload}" >&2
+        exit 1
+    ;;
+esac
